@@ -50,17 +50,25 @@ def classificar_estados(df):
 
 
 def calcular_matriz_transicao(df):
-    # Desloca a coluna Estado em 1 dia para mapear "Ontem -> Hoje"
     df['Estado_Anterior'] = df['Estado'].shift(1)
-    df = df.dropna()  # Remove o primeiro dia que ficou sem 'Estado_Anterior'
+    df = df.dropna()
 
-    # Cria uma tabela de contingência cruzando o estado de ontem com o de hoje
-    # O parâmetro normalize='index' garante que a soma das linhas seja estritamente 1.0
     matriz_transicao = pd.crosstab(
         df['Estado_Anterior'],
         df['Estado'],
         normalize='index'
     )
+
+    ordem_estados = ['Alta', 'Baixa', 'Estavel']
+    matriz_transicao = matriz_transicao.reindex(
+        index=ordem_estados, columns=ordem_estados, fill_value=0)
+
+    # CORREÇÃO DE PONTO FLUTUANTE:
+    # Força a soma exata de 1.0 jogando o resíduo do arredondamento na coluna 'Estavel'
+    matriz_transicao['Estavel'] = 1.0 - \
+        matriz_transicao[['Alta', 'Baixa']].sum(axis=1)
+
+    return matriz_transicao
 
     # Garante a ordem das colunas e linhas para padronização
     ordem_estados = ['Alta', 'Baixa', 'Estavel']
