@@ -31,13 +31,13 @@ Compile e execute o motor estocástico. O programa iterará 100.000 dias de preg
 
 Bash
 # Compilar o código
-gcc simulador.c -o simulador
+gcc simulacao_markov.c -o simulacao_markov
 
 # Executar (Linux/Mac)
-./simulador
+./simulacao_markov
 
 # Executar (Windows)
-simulador.exe
+simulacao_markov.exe
 Saída esperada: Ficheiro convergencia_simulacao.csv.
 
 Etapa 2: Análise Matemática e Visualização (Python)
